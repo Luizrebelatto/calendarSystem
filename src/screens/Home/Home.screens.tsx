@@ -1,11 +1,13 @@
+
+
 import { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, TextInput, Avatar } from "react-native-paper";
+import { TextInput, AnimatedFAB } from "react-native-paper";
 
 export function Home(){
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
-
+    
     return (
         <View style={styles.wrapper}>
             <TextInput
@@ -24,14 +26,21 @@ export function Home(){
                 keyboardType="default"
                 secureTextEntry={true}
             />
-            <Button mode="contained" onPress={() => console.log("press")} style={{ marginTop: 60, backgroundColor: "#D86F36" }}>
-                Create Meeting
-            </Button>
+            <AnimatedFAB
+                icon="plus"
+                label="Novo item"
+                extended={true}
+                onPress={() => console.log("PRESSED")}
+                visible={true}
+                animateFrom="left"
+                iconMode="dynamic"
+                style={styles.fabStyle}
+             />
        </View>
     )
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
         width: "100%",
@@ -39,5 +48,14 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         paddingHorizontal: 15,
         backgroundColor: "#f2dab5"
-    }
+    },
+    container: {
+        flexGrow: 1,
+    },
+    fabStyle: {
+        bottom: 16,
+        right: 16,
+        position: 'absolute',
+        backgroundColor: "#cb9b54"
+    },
 })
