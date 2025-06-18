@@ -3,13 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { Login } from './src/screens/Login/login.screens';
+import { Home } from './src/screens/Home/Home.screens';
 
 export default function App() {
   return (
       <PaperProvider>
         {/* <Text>Open up App.js to start working on your app!</Text>
         <StatusBar style="auto" /> */}
-        <Login/>
+        <Home/>
       </PaperProvider>
   );
 }
