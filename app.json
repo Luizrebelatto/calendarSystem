@@ -2,6 +2,12 @@
   "expo": {
     "name": "calendarSystem",
     "slug": "calendarSystem",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "android": {
+      "package": "com.anonymous.calendarSystem"
+    },
+    "ios": {
+      "bundleIdentifier": "com.anonymous.calendarSystem"
+    }
   }
 }
