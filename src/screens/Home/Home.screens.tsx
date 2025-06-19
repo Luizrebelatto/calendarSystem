@@ -1,36 +1,19 @@
 
 
-import { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { TextInput, AnimatedFAB } from "react-native-paper";
+import { AnimatedFAB } from "react-native-paper";
+import ListMeetings  from "../../components/ListMeetings/ListMeetings.component";
+import { fakeMeetings } from "../../data/meetings";
 
 export function Home(){
-    const [email, setEmail] = useState<string>("")
-    const [password, setPassword] = useState<string>("")
-    
     return (
         <View style={styles.wrapper}>
-            <TextInput
-                label="Email"
-                mode="outlined"
-                value={email}
-                onChangeText={email => setEmail(email)}
-                keyboardType="email-address"
-            />
-            <TextInput
-                label="Password"
-                mode="outlined"
-                value={password}
-                onChangeText={password => setPassword(password)}
-                style={{ marginTop: 10 }}
-                keyboardType="default"
-                secureTextEntry={true}
-            />
+           <ListMeetings meetings={fakeMeetings}/>
             <AnimatedFAB
                 icon="plus"
-                label="Novo item"
+                label="Create Meeting"
                 extended={true}
-                onPress={() => console.log("PRESSED")}
+                onPress={() => console.log("Press")}
                 visible={true}
                 animateFrom="left"
                 iconMode="dynamic"
@@ -47,7 +30,7 @@ export const styles = StyleSheet.create({
         alignContent: "center",
         justifyContent: "center",
         paddingHorizontal: 15,
-        backgroundColor: "#f2dab5"
+        backgroundColor: "#f2dab5",
     },
     container: {
         flexGrow: 1,
