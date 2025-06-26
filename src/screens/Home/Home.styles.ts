@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
         alignContent: "center",
         justifyContent: "center",
         backgroundColor: "#f2dab5",
+        position: "relative",
     },
     container: {
         flexGrow: 1,
