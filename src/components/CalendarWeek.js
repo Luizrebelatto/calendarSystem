@@ -1,17 +1,10 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
-const events = [
-  { id: 1, title: 'English Class - Aline', day: 1, start: 9, end: 10 },
-  { id: 2, title: 'English Class - Aline', day: 2, start: 8, end: 9 },
-  { id: 3, title: 'English Class', day: 3, start: 8, end: 9 },         
-  { id: 4, title: 'English Class - Aline', day: 2, start: 9, end: 10 },
-];
-
 const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 const hours = Array.from({ length: 12 }, (_, i) => i + 2);
 
-export default function CalendarWeek() {
+export default function CalendarWeek({ events }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
