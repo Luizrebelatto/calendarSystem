@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 
-const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const hours = Array.from({ length: 12 }, (_, i) => i + 2);
 
 export default function CalendarWeek({ events }) {
@@ -21,17 +21,17 @@ export default function CalendarWeek({ events }) {
             <View style={styles.timeCol}>
               <Text style={styles.hourText}>{hour} AM</Text>
             </View>
-            {days.map((_, dayIdx) => (
-              <View style={styles.dayCol} key={dayIdx}>
+            {days.map((_, index) => (
+              <View style={styles.dayCol} key={index}>
                 {events
                   .filter(
-                    (ev) => ev.day === dayIdx && ev.start === hour
+                    (item) => item.day === index && item.start === hour
                   )
-                  .map((ev) => (
-                    <View style={styles.event} key={ev.id}>
-                      <Text style={styles.eventText}>{ev.title}</Text>
+                  .map((item) => (
+                    <View style={styles.event} key={item.id}>
+                      <Text style={styles.eventText}>{item.title}</Text>
                       <Text style={styles.eventTime}>
-                        {ev.start} - {ev.end}am
+                        {item.start} - {item.end}am
                       </Text>
                     </View>
                   ))}
@@ -45,14 +45,58 @@ export default function CalendarWeek({ events }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#e8d6ac', paddingTop: 60 },
-  header: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#453819', backgroundColor: '#e8d6ac' },
-  dayCol: { flex: 1, alignItems: 'center', borderLeftWidth: 1, borderColor: '#453819', minHeight: 40 },
-  dayText: { fontWeight: 'bold', padding: 6, color: '#222' },
-  timeCol: { width: 50, alignItems: 'center', justifyContent: 'center' },
-  hourText: { color: '#888', fontSize: 12 },
-  row: { flexDirection: 'row', minHeight: 40, borderBottomWidth: 1, borderColor: '#453819' },
-  event: { backgroundColor: '#199e4c', borderRadius: 6, padding: 4, margin: 2, minWidth: 80 },
-  eventText: { color: '#453819', fontWeight: 'bold', fontSize: 12 },
-  eventTime: { color: '#453819', fontSize: 10 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#e8d6ac', 
+    paddingTop: 60 
+  },
+  header: { 
+    flexDirection: 'row', 
+    borderBottomWidth: 1, 
+    borderColor: '#453819', 
+    backgroundColor: '#e8d6ac' 
+  },
+  dayCol: { 
+    flex: 1, 
+    alignItems: 'center', 
+    borderLeftWidth: 1, 
+    borderColor: '#453819', 
+    minHeight: 40 
+  },
+  dayText: { 
+    fontWeight: 'bold', 
+    padding: 6, 
+    color: '#222' 
+  },
+  timeCol: { 
+    width: 50, 
+    alignItems: 'center', 
+    justifyContent: 'center' 
+  },
+  hourText: { 
+    color: '#888', 
+    fontSize: 12 
+  },
+  row: { 
+    flexDirection: 'row', 
+    minHeight: 40, 
+    borderBottomWidth: 1, 
+    borderColor: '#453819' 
+  },
+  event: { 
+    backgroundColor: '#199e4c', 
+    borderRadius: 6, 
+    padding: 4, 
+    margin: 2, 
+    minWidth: 80 
+  },
+  eventText: { 
+    color: '#453819', 
+    fontWeight: 'bold',
+    fontSize: 12 
+  },
+  eventTime: { 
+    color: '#453819', 
+    fontSize: 10 
+  },
 }); 
