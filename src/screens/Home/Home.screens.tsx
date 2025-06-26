@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { AnimatedFAB, Dialog, Portal, Button } from "react-native-paper";
+import { View, Text } from "react-native";
+import { AnimatedFAB, Dialog, Portal, Button, TextInput } from "react-native-paper";
+import { Dropdown } from "react-native-paper-dropdown";
 import { styles } from "./Home.styles";
 import CalendarWeek from "../../components/CalendarWeek";
-import { Picker } from '@react-native-picker/picker';
 
 const initialEvents = [
   { id: 1, title: 'Meeting', day: 1, start: 9, end: 10 },
@@ -13,21 +13,23 @@ const initialEvents = [
 ];
 
 const days = [
-  { label: 'Domingo', value: 0 },
-  { label: 'Segunda', value: 1 },
-  { label: 'Terça', value: 2 },
-  { label: 'Quarta', value: 3 },
-  { label: 'Quinta', value: 4 },
-  { label: 'Sexta', value: 5 },
-  { label: 'Sábado', value: 6 },
+  { label: 'Domingo', value: '0' },
+  { label: 'Segunda', value: '1' },
+  { label: 'Terça', value: '2' },
+  { label: 'Quarta', value: '3' },
+  { label: 'Quinta', value: '4' },
+  { label: 'Sexta', value: '5' },
+  { label: 'Sábado', value: '6' },
 ];
-const hours = Array.from({ length: 12 }, (_, i) => i + 2);
+const hours = Array.from({ length: 12 }, (_, i) => i + 2).map(h => ({ label: `${h}:00`, value: h.toString() }));
 
 export function Home(){
     const [events, setEvents] = useState(initialEvents);
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedDay, setSelectedDay] = useState(1);
-    const [selectedHour, setSelectedHour] = useState(8);
+    const [selectedDay, setSelectedDay] = useState('1');
+    const [selectedHour, setSelectedHour] = useState('8');
+    const [showDayDropdown, setShowDayDropdown] = useState(false);
+    const [showHourDropdown, setShowHourDropdown] = useState(false);
 
     const handleCreateMeeting = () => {
         setModalVisible(true);
@@ -40,9 +42,9 @@ export function Home(){
             {
                 id: nextId,
                 title: 'Meeting',
-                day: selectedDay,
-                start: selectedHour,
-                end: selectedHour + 1
+                day: Number(selectedDay),
+                start: Number(selectedHour),
+                end: Number(selectedHour) + 1
             }
         ]);
         setModalVisible(false);
@@ -66,26 +68,20 @@ export function Home(){
                 <Dialog.Title style={{ textAlign: 'center' }}>Criar Reunião</Dialog.Title>
                 <Dialog.Content>
                   <View style={{ backgroundColor: '#cb9b54', borderRadius: 10, padding: 10 }}>
-                    <Text>Dia da semana:</Text>
-                    <Picker
-                      selectedValue={selectedDay}
-                      onValueChange={(itemValue) => setSelectedDay(itemValue)}
-                      style={{ width: 200, alignSelf: 'center' }}
-                    >
-                      {days.map((d) => (
-                        <Picker.Item key={d.value} label={d.label} value={d.value} />
-                      ))}
-                    </Picker>
-                    <Text>Hora de início:</Text>
-                    <Picker
-                      selectedValue={selectedHour}
-                      onValueChange={(itemValue) => setSelectedHour(itemValue)}
-                      style={{ width: 200, alignSelf: 'center' }}
-                    >
-                      {hours.map((h) => (
-                        <Picker.Item key={h} label={`${h}:00`} value={h} />
-                      ))}
-                    </Picker>
+                    <Dropdown
+                      label={"Dia da semana"}
+                      mode={"outlined"}
+                      value={selectedDay}
+                      onSelect={setSelectedDay}
+                      options={days}
+                    />
+                    <Dropdown
+                      label={"Hora de início"}
+                      mode={"outlined"}
+                      value={selectedHour}
+                      onSelect={setSelectedHour}
+                      options={hours}
+                    />
                   </View>
                 </Dialog.Content>
                 <Dialog.Actions>
