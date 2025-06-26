@@ -45,14 +45,14 @@ export default function CalendarWeek({ events }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', paddingTop: 60 },
-  header: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#eee', backgroundColor: '#fafbfc' },
-  dayCol: { flex: 1, alignItems: 'center', borderLeftWidth: 1, borderColor: '#eee', minHeight: 40 },
+  container: { flex: 1, backgroundColor: '#e8d6ac', paddingTop: 60 },
+  header: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#453819', backgroundColor: '#e8d6ac' },
+  dayCol: { flex: 1, alignItems: 'center', borderLeftWidth: 1, borderColor: '#453819', minHeight: 40 },
   dayText: { fontWeight: 'bold', padding: 6, color: '#222' },
   timeCol: { width: 50, alignItems: 'center', justifyContent: 'center' },
   hourText: { color: '#888', fontSize: 12 },
-  row: { flexDirection: 'row', minHeight: 40, borderBottomWidth: 1, borderColor: '#eee' },
+  row: { flexDirection: 'row', minHeight: 40, borderBottomWidth: 1, borderColor: '#453819' },
   event: { backgroundColor: '#199e4c', borderRadius: 6, padding: 4, margin: 2, minWidth: 80 },
-  eventText: { color: '#fff', fontWeight: 'bold', fontSize: 12 },
-  eventTime: { color: '#fff', fontSize: 10 },
+  eventText: { color: '#453819', fontWeight: 'bold', fontSize: 12 },
+  eventTime: { color: '#453819', fontSize: 10 },
 }); 
