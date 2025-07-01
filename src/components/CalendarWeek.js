@@ -1,214 +1,160 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Dropdown } from 'react-native-paper-dropdown';
 
 const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+const hours = Array.from({ length: 13 }, (_, i) => i + 1); // 1AM até 1PM
 const months = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  { label: 'Janeiro', value: '0' },
+  { label: 'Fevereiro', value: '1' },
+  { label: 'Março', value: '2' },
+  { label: 'Abril', value: '3' },
+  { label: 'Maio', value: '4' },
+  { label: 'Junho', value: '5' },
+  { label: 'Julho', value: '6' },
+  { label: 'Agosto', value: '7' },
+  { label: 'Setembro', value: '8' },
+  { label: 'Outubro', value: '9' },
+  { label: 'Novembro', value: '10' },
+  { label: 'Dezembro', value: '11' },
 ];
+const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(y => ({ label: `${y}`, value: y.toString() }));
 
-export default function CalendarMonth({ events }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
-  
-  // Obter o primeiro dia do mês e quantos dias tem o mês
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-  const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-  const daysInMonth = lastDayOfMonth.getDate();
-  const firstDayWeekday = firstDayOfMonth.getDay();
-  
-  // Gerar array de dias para exibir no calendário
-  const generateDays = () => {
-    const days = [];
-    
-    // Adicionar dias vazios do início (dias do mês anterior)
-    for (let i = 0; i < firstDayWeekday; i++) {
-      days.push({ day: '', isEmpty: true });
-    }
-    
-    // Adicionar todos os dias do mês
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(currentYear, currentMonth, day);
-      const dayOfWeek = date.getDay();
-      
-      // Verificar se há eventos neste dia
-      const dayEvents = events.filter(event => {
-        return event.year === currentYear && 
-               event.month === currentMonth && 
-               event.day === day;
-      });
-      
-      days.push({
-        day,
-        isEmpty: false,
-        hasEvents: dayEvents.length > 0,
-        events: dayEvents
-      });
-    }
-    
-    return days;
+export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
+  // Estado para ano, mês e semana
+  const today = new Date();
+  const [selectedYear, setSelectedYear] = useState(today.getFullYear().toString());
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth().toString());
+  // Calcula o primeiro dia do mês selecionado
+  const firstDayOfMonth = new Date(Number(selectedYear), Number(selectedMonth), 1);
+  // Calcula o primeiro domingo do mês selecionado
+  const firstSunday = new Date(firstDayOfMonth);
+  firstSunday.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
+  // Estado para o índice da semana (0 = primeira semana do mês)
+  const [weekIndex, setWeekIndex] = useState(0);
+
+  // Gera os dias da semana exibida
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(firstSunday);
+    d.setDate(firstSunday.getDate() + weekIndex * 7 + i);
+    return d;
+  });
+
+  // Função para encontrar eventos que começam neste slot
+  const getEventsStartingAtSlot = (year, month, day, hour) => {
+    return events.filter(ev =>
+      ev.year === year &&
+      ev.month === month &&
+      ev.day === day &&
+      ev.start === hour
+    );
   };
-  
-  const goToPreviousMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
+
+  // Função para saber se o slot está ocupado por um evento que começou antes
+  const isSlotOccupied = (year, month, day, hour) => {
+    return events.some(ev =>
+      ev.year === year &&
+      ev.month === month &&
+      ev.day === day &&
+      ev.start < hour &&
+      ev.end > hour
+    );
   };
-  
-  const goToNextMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
-  };
-  
-  const goToPreviousYear = () => {
-    setCurrentDate(new Date(currentYear - 1, currentMonth, 1));
-  };
-  
-  const goToNextYear = () => {
-    setCurrentDate(new Date(currentYear + 1, currentMonth, 1));
-  };
-  
-  const days = generateDays();
-  
+
+  // Navegação de semana
+  const goToPreviousWeek = () => setWeekIndex(weekIndex - 1);
+  const goToNextWeek = () => setWeekIndex(weekIndex + 1);
+  // Ao trocar mês/ano, reseta para a primeira semana
+  const handleMonthChange = (value) => { setSelectedMonth(value); setWeekIndex(0); };
+  const handleYearChange = (value) => { setSelectedYear(value); setWeekIndex(0); };
+
   return (
     <View style={styles.container}>
-      {/* Header com navegação */}
-      <View style={styles.header}>
-        <View style={styles.navigationRow}>
-          <TouchableOpacity onPress={goToPreviousYear} style={styles.navButton}>
-            <Text style={styles.navButtonText}>‹‹</Text>
-          </TouchableOpacity>
-          <Text style={styles.yearText}>{currentYear}</Text>
-          <TouchableOpacity onPress={goToNextYear} style={styles.navButton}>
-            <Text style={styles.navButtonText}>››</Text>
-          </TouchableOpacity>
-        </View>
-        
-        <View style={styles.navigationRow}>
-          <TouchableOpacity onPress={goToPreviousMonth} style={styles.navButton}>
-            <Text style={styles.navButtonText}>‹</Text>
-          </TouchableOpacity>
-          <Text style={styles.monthText}>{months[currentMonth]}</Text>
-          <TouchableOpacity onPress={goToNextMonth} style={styles.navButton}>
-            <Text style={styles.navButtonText}>›</Text>
-          </TouchableOpacity>
-        </View>
+      {/* Controles de navegação */}
+      <View style={styles.controlsRow}>
+        <Dropdown
+          label={"Ano"}
+          mode={"outlined"}
+          value={selectedYear}
+          onSelect={handleYearChange}
+          options={years}
+          style={{ width: 90, marginRight: 8 }}
+        />
+        <Dropdown
+          label={"Mês"}
+          mode={"outlined"}
+          value={selectedMonth}
+          onSelect={handleMonthChange}
+          options={months}
+          style={{ width: 120, marginRight: 8 }}
+        />
+        <TouchableOpacity onPress={goToPreviousWeek} style={styles.navButton}><Text style={styles.navButtonText}>‹</Text></TouchableOpacity>
+        <Text style={styles.weekLabel}>Semana {weekIndex + 1}</Text>
+        <TouchableOpacity onPress={goToNextWeek} style={styles.navButton}><Text style={styles.navButtonText}>›</Text></TouchableOpacity>
       </View>
-      
-      {/* Dias da semana */}
-      <View style={styles.weekDaysHeader}>
-        {daysOfWeek.map((day) => (
-          <View key={day} style={styles.weekDayCell}>
-            <Text style={styles.weekDayText}>{day}</Text>
+      {/* Cabeçalho com dias da semana */}
+      <View style={styles.headerRow}>
+        <View style={styles.hourCol} />
+        {weekDays.map((date, idx) => (
+          <View style={styles.dayCol} key={idx}>
+            <Text style={styles.dayName}>{daysOfWeek[date.getDay()]}</Text>
+            <Text style={styles.dayNumber}>{date.getDate()}</Text>
           </View>
         ))}
       </View>
-      
-      {/* Grid de dias */}
-      <ScrollView style={styles.daysGrid}>
-        <View style={styles.daysContainer}>
-          {days.map((dayData, index) => (
-            <View key={index} style={styles.dayCell}>
-              {!dayData.isEmpty && (
-                <View style={styles.dayContent}>
-                  <Text style={styles.dayText}>{dayData.day}</Text>
-                  {dayData.hasEvents && (
-                    <View style={styles.eventIndicator}>
-                      <Text style={styles.eventIndicatorText}>•</Text>
-                    </View>
-                  )}
-                </View>
-              )}
+      <ScrollView style={{ flex: 1 }}>
+        {hours.map((hour) => (
+          <View style={styles.row} key={hour}>
+            <View style={styles.hourCol}>
+              <Text style={styles.hourText}>{hour} AM</Text>
             </View>
-          ))}
-        </View>
+            {weekDays.map((date, dayIdx) => {
+              // Só renderiza bloco se o evento começa neste slot
+              const slotEvents = getEventsStartingAtSlot(date.getFullYear(), date.getMonth(), date.getDate(), hour);
+              // Se o slot está ocupado por evento iniciado antes, não renderiza nada
+              if (isSlotOccupied(date.getFullYear(), date.getMonth(), date.getDate(), hour)) {
+                return <View key={dayIdx} style={styles.dayCol} />;
+              }
+              return (
+                <TouchableOpacity
+                  key={dayIdx}
+                  style={styles.dayCol}
+                  activeOpacity={0.7}
+                  onPress={() => onSlotPress && onSlotPress(date, hour)}
+                >
+                  {slotEvents.map((ev, i) => (
+                    <View
+                      key={i}
+                      style={[styles.eventBlock, { height: 48 * (ev.end - ev.start) - 8 }]}
+                    >
+                      <Text style={styles.eventTitle}>{ev.title}</Text>
+                      <Text style={styles.eventTime}>{ev.start}:00 - {ev.end}:00</Text>
+                    </View>
+                  ))}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: 60,
-  },
-  header: {
-    backgroundColor: '#fafbfc',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  navigationRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  navButton: {
-    padding: 10,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 5,
-    minWidth: 40,
-    alignItems: 'center',
-  },
-  navButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  yearText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  monthText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  weekDaysHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  weekDayCell: {
-    flex: 1,
-    padding: 10,
-    alignItems: 'center',
-  },
-  weekDayText: {
-    fontWeight: 'bold',
-    color: '#666',
-  },
-  daysGrid: {
-    flex: 1,
-  },
-  daysContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  dayCell: {
-    width: '14.28%', // 100% / 7 dias
-    aspectRatio: 1,
-    borderWidth: 0.5,
-    borderColor: '#eee',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dayContent: {
-    alignItems: 'center',
-  },
-  dayText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  eventIndicator: {
-    marginTop: 2,
-  },
-  eventIndicatorText: {
-    fontSize: 12,
-    color: '#199e4c',
-    fontWeight: 'bold',
-  },
+  container: { flex: 1, backgroundColor: '#fff', paddingTop: 10 },
+  controlsRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, marginBottom: 6 },
+  navButton: { padding: 6, backgroundColor: '#e0e0e0', borderRadius: 5, marginHorizontal: 2 },
+  navButtonText: { fontSize: 18, fontWeight: 'bold', color: '#333' },
+  weekLabel: { fontWeight: 'bold', fontSize: 14, marginHorizontal: 8 },
+  headerRow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#eee', backgroundColor: '#fafbfc' },
+  hourCol: { width: 50, alignItems: 'center', justifyContent: 'center' },
+  dayCol: { flex: 1, minHeight: 40, borderLeftWidth: 1, borderColor: '#eee', alignItems: 'center', justifyContent: 'flex-start' },
+  dayName: { fontWeight: 'bold', color: '#222', fontSize: 13, marginTop: 4 },
+  dayNumber: { fontWeight: 'bold', color: '#199e4c', fontSize: 18 },
+  row: { flexDirection: 'row', minHeight: 48, borderBottomWidth: 1, borderColor: '#eee' },
+  hourText: { color: '#888', fontSize: 12 },
+  eventBlock: { backgroundColor: '#199e4c', borderRadius: 6, padding: 4, margin: 2, minWidth: 60, alignItems: 'center' },
+  eventTitle: { color: '#fff', fontWeight: 'bold', fontSize: 12 },
+  eventTime: { color: '#fff', fontSize: 10 },
 }); 

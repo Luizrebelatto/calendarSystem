@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { AnimatedFAB, Dialog, Portal, Button, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 import { styles } from "./Home.styles";
-import CalendarMonth from "../../components/CalendarWeek";
+import CalendarWeekGoogleStyle from "../../components/CalendarWeek";
 
 const initialEvents = [
   { id: 1, title: 'Meeting', year: 2024, month: 11, day: 15, start: 9, end: 10 },
@@ -44,6 +44,15 @@ export function Home(){
         setModalVisible(true);
     };
 
+    const handleSlotPress = (date, hour) => {
+        setSelectedYear(date.getFullYear().toString());
+        setSelectedMonth(date.getMonth().toString());
+        setSelectedDay(date.getDate().toString());
+        setSelectedStartHour(hour.toString());
+        setSelectedEndHour((hour + 1).toString());
+        setModalVisible(true);
+    };
+
     const handleAddMeeting = () => {
         const nextId = events.length + 1;
         setEvents([
@@ -64,7 +73,7 @@ export function Home(){
 
     return (
         <View style={styles.wrapper}>
-            <CalendarMonth events={events}/>
+            <CalendarWeekGoogleStyle events={events} onSlotPress={handleSlotPress}/>
             <AnimatedFAB
                 icon="plus"
                 label="Create Meeting"
