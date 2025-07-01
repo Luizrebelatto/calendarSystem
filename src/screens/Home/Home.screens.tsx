@@ -3,33 +3,42 @@ import { View, Text } from "react-native";
 import { AnimatedFAB, Dialog, Portal, Button, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 import { styles } from "./Home.styles";
-import CalendarWeek from "../../components/CalendarWeek";
+import CalendarMonth from "../../components/CalendarWeek";
 
 const initialEvents = [
-  { id: 1, title: 'Meeting', day: 1, start: 9, end: 10 },
-  { id: 2, title: 'Meeting', day: 2, start: 8, end: 9 },
-  { id: 3, title: 'Meeting', day: 3, start: 8, end: 9 },
-  { id: 4, title: 'Meeting', day: 2, start: 9, end: 10 },
+  { id: 1, title: 'Meeting', year: 2024, month: 11, day: 15, start: 9, end: 10 },
+  { id: 2, title: 'Meeting', year: 2024, month: 11, day: 18, start: 8, end: 9 },
+  { id: 3, title: 'Meeting', year: 2024, month: 11, day: 20, start: 8, end: 9 },
+  { id: 4, title: 'Meeting', year: 2024, month: 11, day: 22, start: 9, end: 10 },
 ];
 
-const days = [
-  { label: 'Domingo', value: '0' },
-  { label: 'Segunda', value: '1' },
-  { label: 'Terça', value: '2' },
-  { label: 'Quarta', value: '3' },
-  { label: 'Quinta', value: '4' },
-  { label: 'Sexta', value: '5' },
-  { label: 'Sábado', value: '6' },
+const days = Array.from({ length: 31 }, (_, i) => i + 1).map(d => ({ label: `${d}`, value: d.toString() }));
+const months = [
+  { label: 'Janeiro', value: '0' },
+  { label: 'Fevereiro', value: '1' },
+  { label: 'Março', value: '2' },
+  { label: 'Abril', value: '3' },
+  { label: 'Maio', value: '4' },
+  { label: 'Junho', value: '5' },
+  { label: 'Julho', value: '6' },
+  { label: 'Agosto', value: '7' },
+  { label: 'Setembro', value: '8' },
+  { label: 'Outubro', value: '9' },
+  { label: 'Novembro', value: '10' },
+  { label: 'Dezembro', value: '11' },
 ];
+const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(y => ({ label: `${y}`, value: y.toString() }));
 const hours = Array.from({ length: 12 }, (_, i) => i + 2).map(h => ({ label: `${h}:00`, value: h.toString() }));
 
 export function Home(){
     const [events, setEvents] = useState(initialEvents);
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedDay, setSelectedDay] = useState('1');
-    const [selectedHour, setSelectedHour] = useState('8');
-    const [showDayDropdown, setShowDayDropdown] = useState(false);
-    const [showHourDropdown, setShowHourDropdown] = useState(false);
+    const [meetingTitle, setMeetingTitle] = useState('');
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth().toString());
+    const [selectedDay, setSelectedDay] = useState('15');
+    const [selectedStartHour, setSelectedStartHour] = useState('8');
+    const [selectedEndHour, setSelectedEndHour] = useState('9');
 
     const handleCreateMeeting = () => {
         setModalVisible(true);
@@ -41,18 +50,21 @@ export function Home(){
             ...events,
             {
                 id: nextId,
-                title: 'Meeting',
+                title: meetingTitle || 'Meeting',
+                year: Number(selectedYear),
+                month: Number(selectedMonth),
                 day: Number(selectedDay),
-                start: Number(selectedHour),
-                end: Number(selectedHour) + 1
+                start: Number(selectedStartHour),
+                end: Number(selectedEndHour)
             }
         ]);
         setModalVisible(false);
+        setMeetingTitle(''); // Reset do título
     };
 
     return (
         <View style={styles.wrapper}>
-            <CalendarWeek events={events}/>
+            <CalendarMonth events={events}/>
             <AnimatedFAB
                 icon="plus"
                 label="Create Meeting"
@@ -64,12 +76,34 @@ export function Home(){
                 style={styles.fabStyle}
              />
             <Portal>
-              <Dialog visible={modalVisible} onDismiss={() => setModalVisible(false)} style={{ alignSelf: 'center', width: 260, backgroundColor: '#cb9b54' }}>
+              <Dialog visible={modalVisible} onDismiss={() => setModalVisible(false)} style={{ alignSelf: 'center', width: 300, backgroundColor: '#cb9b54' }}>
                 <Dialog.Title style={{ textAlign: 'center' }}>Criar Reunião</Dialog.Title>
                 <Dialog.Content>
                   <View style={{ backgroundColor: '#cb9b54', borderRadius: 10, padding: 10 }}>
+                    <TextInput
+                      label="Título da reunião"
+                      value={meetingTitle}
+                      onChangeText={setMeetingTitle}
+                      mode="outlined"
+                      style={{ marginBottom: 10 }}
+                      placeholder="Digite o título da reunião"
+                    />
                     <Dropdown
-                      label={"Dia da semana"}
+                      label={"Ano"}
+                      mode={"outlined"}
+                      value={selectedYear}
+                      onSelect={setSelectedYear}
+                      options={years}
+                    />
+                    <Dropdown
+                      label={"Mês"}
+                      mode={"outlined"}
+                      value={selectedMonth}
+                      onSelect={setSelectedMonth}
+                      options={months}
+                    />
+                    <Dropdown
+                      label={"Dia do mês"}
                       mode={"outlined"}
                       value={selectedDay}
                       onSelect={setSelectedDay}
@@ -78,8 +112,15 @@ export function Home(){
                     <Dropdown
                       label={"Hora de início"}
                       mode={"outlined"}
-                      value={selectedHour}
-                      onSelect={setSelectedHour}
+                      value={selectedStartHour}
+                      onSelect={setSelectedStartHour}
+                      options={hours}
+                    />
+                    <Dropdown
+                      label={"Hora de fim"}
+                      mode={"outlined"}
+                      value={selectedEndHour}
+                      onSelect={setSelectedEndHour}
                       options={hours}
                     />
                   </View>
