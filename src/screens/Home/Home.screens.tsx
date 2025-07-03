@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import { AnimatedFAB, Dialog, Portal, Button, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 import { styles } from "./Home.styles";
@@ -54,6 +54,17 @@ export function Home(){
     };
 
     const handleAddMeeting = () => {
+        // Verifica conflito
+        const hasConflict = events.some(ev =>
+            ev.year === Number(selectedYear) &&
+            ev.month === Number(selectedMonth) &&
+            ev.day === Number(selectedDay) &&
+            ((Number(selectedStartHour) < ev.end && Number(selectedEndHour) > ev.start))
+        );
+        if (hasConflict) {
+            Alert.alert('Conflito de horário', 'Já existe uma reunião nesse período.');
+            return;
+        }
         const nextId = events.length + 1;
         setEvents([
             ...events,
@@ -68,7 +79,7 @@ export function Home(){
             }
         ]);
         setModalVisible(false);
-        setMeetingTitle(''); // Reset do título
+        setMeetingTitle('');
     };
 
     return (
@@ -86,47 +97,47 @@ export function Home(){
              />
             <Portal>
               <Dialog visible={modalVisible} onDismiss={() => setModalVisible(false)} style={{ alignSelf: 'center', width: 300, backgroundColor: '#cb9b54' }}>
-                <Dialog.Title style={{ textAlign: 'center' }}>Criar Reunião</Dialog.Title>
+                <Dialog.Title style={{ textAlign: 'center' }}>Create Meeting</Dialog.Title>
                 <Dialog.Content>
                   <View style={{ backgroundColor: '#cb9b54', borderRadius: 10, padding: 10 }}>
                     <TextInput
-                      label="Título da reunião"
+                      label="Meeting Title"
                       value={meetingTitle}
                       onChangeText={setMeetingTitle}
                       mode="outlined"
                       style={{ marginBottom: 10 }}
-                      placeholder="Digite o título da reunião"
+                      placeholder="Enter the meeting title"
                     />
                     <Dropdown
-                      label={"Ano"}
+                      label={"Year"}
                       mode={"outlined"}
                       value={selectedYear}
                       onSelect={setSelectedYear}
                       options={years}
                     />
                     <Dropdown
-                      label={"Mês"}
+                      label={"Month"}
                       mode={"outlined"}
                       value={selectedMonth}
                       onSelect={setSelectedMonth}
                       options={months}
                     />
                     <Dropdown
-                      label={"Dia do mês"}
+                      label={"day"}
                       mode={"outlined"}
                       value={selectedDay}
                       onSelect={setSelectedDay}
                       options={days}
                     />
                     <Dropdown
-                      label={"Hora de início"}
+                      label={"begin hour"}
                       mode={"outlined"}
                       value={selectedStartHour}
                       onSelect={setSelectedStartHour}
                       options={hours}
                     />
                     <Dropdown
-                      label={"Hora de fim"}
+                      label={"end hour"}
                       mode={"outlined"}
                       value={selectedEndHour}
                       onSelect={setSelectedEndHour}

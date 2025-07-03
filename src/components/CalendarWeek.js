@@ -2,45 +2,38 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Dropdown } from 'react-native-paper-dropdown';
 
-const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-const hours = Array.from({ length: 13 }, (_, i) => i + 1); // 1AM até 1PM
+const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const hours = Array.from({ length: 13 }, (_, i) => i + 1);
 const months = [
-  { label: 'Janeiro', value: '0' },
-  { label: 'Fevereiro', value: '1' },
-  { label: 'Março', value: '2' },
-  { label: 'Abril', value: '3' },
-  { label: 'Maio', value: '4' },
-  { label: 'Junho', value: '5' },
-  { label: 'Julho', value: '6' },
-  { label: 'Agosto', value: '7' },
-  { label: 'Setembro', value: '8' },
-  { label: 'Outubro', value: '9' },
-  { label: 'Novembro', value: '10' },
-  { label: 'Dezembro', value: '11' },
+  { label: 'January', value: '0' },
+  { label: 'February', value: '1' },
+  { label: 'March', value: '2' },
+  { label: 'April', value: '3' },
+  { label: 'May', value: '4' },
+  { label: 'June', value: '5' },
+  { label: 'July', value: '6' },
+  { label: 'August', value: '7' },
+  { label: 'September', value: '8' },
+  { label: 'October', value: '9' },
+  { label: 'November', value: '10' },
+  { label: 'December', value: '11' },
 ];
 const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(y => ({ label: `${y}`, value: y.toString() }));
 
 export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
-  // Estado para ano, mês e semana
   const today = new Date();
   const [selectedYear, setSelectedYear] = useState(today.getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth().toString());
-  // Calcula o primeiro dia do mês selecionado
   const firstDayOfMonth = new Date(Number(selectedYear), Number(selectedMonth), 1);
-  // Calcula o primeiro domingo do mês selecionado
   const firstSunday = new Date(firstDayOfMonth);
   firstSunday.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
-  // Estado para o índice da semana (0 = primeira semana do mês)
   const [weekIndex, setWeekIndex] = useState(0);
 
-  // Gera os dias da semana exibida
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(firstSunday);
     d.setDate(firstSunday.getDate() + weekIndex * 7 + i);
     return d;
   });
-
-  // Função para encontrar eventos que começam neste slot
   const getEventsStartingAtSlot = (year, month, day, hour) => {
     return events.filter(ev =>
       ev.year === year &&
@@ -50,7 +43,6 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
     );
   };
 
-  // Função para saber se o slot está ocupado por um evento que começou antes
   const isSlotOccupied = (year, month, day, hour) => {
     return events.some(ev =>
       ev.year === year &&
@@ -61,16 +53,14 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
     );
   };
 
-  // Navegação de semana
   const goToPreviousWeek = () => setWeekIndex(weekIndex - 1);
   const goToNextWeek = () => setWeekIndex(weekIndex + 1);
-  // Ao trocar mês/ano, reseta para a primeira semana
+
   const handleMonthChange = (value) => { setSelectedMonth(value); setWeekIndex(0); };
   const handleYearChange = (value) => { setSelectedYear(value); setWeekIndex(0); };
 
   return (
     <View style={styles.container}>
-      {/* Controles de navegação */}
       <View style={styles.controlsRow}>
         <Dropdown
           label={"Ano"}
@@ -92,7 +82,6 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
         <Text style={styles.weekLabel}>Semana {weekIndex + 1}</Text>
         <TouchableOpacity onPress={goToNextWeek} style={styles.navButton}><Text style={styles.navButtonText}>›</Text></TouchableOpacity>
       </View>
-      {/* Cabeçalho com dias da semana */}
       <View style={styles.headerRow}>
         <View style={styles.hourCol} />
         {weekDays.map((date, idx) => (
