@@ -109,9 +109,7 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
               <Text style={styles.hourText}>{hour} AM</Text>
             </View>
             {weekDays.map((date, dayIdx) => {
-              // Só renderiza bloco se o evento começa neste slot
               const slotEvents = getEventsStartingAtSlot(date.getFullYear(), date.getMonth(), date.getDate(), hour);
-              // Se o slot está ocupado por evento iniciado antes, não renderiza nada
               if (isSlotOccupied(date.getFullYear(), date.getMonth(), date.getDate(), hour)) {
                 return <View key={dayIdx} style={styles.dayCol} />;
               }
@@ -125,7 +123,13 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
                   {slotEvents.map((ev, i) => (
                     <View
                       key={i}
-                      style={[styles.eventBlock, { height: 48 * (ev.end - ev.start) - 8 }]}
+                      style={[
+                        styles.eventBlock,
+                        {
+                          height: 48 * (ev.end - ev.start) - 8,
+                          top: 0,
+                        },
+                      ]}
                     >
                       <Text style={styles.eventTitle}>{ev.title}</Text>
                       <Text style={styles.eventTime}>{ev.start}:00 - {ev.end}:00</Text>
@@ -149,12 +153,31 @@ const styles = StyleSheet.create({
   weekLabel: { fontWeight: 'bold', fontSize: 14, marginHorizontal: 8 },
   headerRow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#eee', backgroundColor: '#fafbfc' },
   hourCol: { width: 50, alignItems: 'center', justifyContent: 'center' },
-  dayCol: { flex: 1, minHeight: 40, borderLeftWidth: 1, borderColor: '#eee', alignItems: 'center', justifyContent: 'flex-start' },
+  dayCol: {
+    flex: 1,
+    minHeight: 40,
+    borderLeftWidth: 1,
+    borderColor: '#eee',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    position: 'relative',
+  },
   dayName: { fontWeight: 'bold', color: '#222', fontSize: 13, marginTop: 4 },
   dayNumber: { fontWeight: 'bold', color: '#199e4c', fontSize: 18 },
   row: { flexDirection: 'row', minHeight: 48, borderBottomWidth: 1, borderColor: '#eee' },
   hourText: { color: '#888', fontSize: 12 },
-  eventBlock: { backgroundColor: '#199e4c', borderRadius: 6, padding: 4, margin: 2, minWidth: 60, alignItems: 'center' },
+  eventBlock: {
+    backgroundColor: '#199e4c',
+    borderRadius: 6,
+    padding: 4,
+    margin: 2,
+    minWidth: 60,
+    alignItems: 'center',
+    position: 'absolute',
+    left: 2,
+    right: 2,
+    zIndex: 2,
+  },
   eventTitle: { color: '#fff', fontWeight: 'bold', fontSize: 12 },
   eventTime: { color: '#fff', fontSize: 10 },
 }); 
