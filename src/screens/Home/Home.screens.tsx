@@ -54,7 +54,6 @@ export function Home(){
     };
 
     const handleAddMeeting = () => {
-        // Verifica conflito
         const hasConflict = events.some(ev =>
             ev.year === Number(selectedYear) &&
             ev.month === Number(selectedMonth) &&
@@ -62,7 +61,7 @@ export function Home(){
             ((Number(selectedStartHour) < ev.end && Number(selectedEndHour) > ev.start))
         );
         if (hasConflict) {
-            Alert.alert('Conflito de horário', 'Já existe uma reunião nesse período.');
+            Alert.alert('Time conflict', 'There is already a meeting during this period.');
             return;
         }
         const nextId = events.length + 1;

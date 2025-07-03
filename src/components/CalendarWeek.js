@@ -79,7 +79,7 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
           style={{ width: 120, marginRight: 8 }}
         />
         <TouchableOpacity onPress={goToPreviousWeek} style={styles.navButton}><Text style={styles.navButtonText}>‹</Text></TouchableOpacity>
-        <Text style={styles.weekLabel}>Semana {weekIndex + 1}</Text>
+        <Text style={styles.weekLabel}>Week {weekIndex + 1}</Text>
         <TouchableOpacity onPress={goToNextWeek} style={styles.navButton}><Text style={styles.navButtonText}>›</Text></TouchableOpacity>
       </View>
       <View style={styles.headerRow}>
@@ -135,12 +135,12 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', paddingTop: 10 },
+  container: { flex: 1, backgroundColor: '#dbb781', paddingTop: 50 },
   controlsRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, marginBottom: 6 },
   navButton: { padding: 6, backgroundColor: '#e0e0e0', borderRadius: 5, marginHorizontal: 2 },
   navButtonText: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   weekLabel: { fontWeight: 'bold', fontSize: 14, marginHorizontal: 8 },
-  headerRow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#eee', backgroundColor: '#fafbfc' },
+  headerRow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#eee', backgroundColor: '#dbb781' },
   hourCol: { width: 50, alignItems: 'center', justifyContent: 'center' },
   dayCol: {
     flex: 1,
@@ -151,8 +151,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     position: 'relative',
   },
-  dayName: { fontWeight: 'bold', color: '#222', fontSize: 13, marginTop: 4 },
-  dayNumber: { fontWeight: 'bold', color: '#199e4c', fontSize: 18 },
+  dayName: { fontWeight: 'bold', color: '#fff', fontSize: 13, marginTop: 4 },
+  dayNumber: { fontWeight: 'bold', color: '#fff', fontSize: 18 },
   row: { flexDirection: 'row', minHeight: 48, borderBottomWidth: 1, borderColor: '#eee' },
   hourText: { color: '#888', fontSize: 12 },
   eventBlock: {
