@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-nati
 import { Dropdown } from 'react-native-paper-dropdown';
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const hours = Array.from({ length: 13 }, (_, i) => i + 1);
+const hours = Array.from({ length: 24 }, (_, i) => i);
 const months = [
   { label: 'January', value: '0' },
   { label: 'February', value: '1' },
@@ -19,6 +19,13 @@ const months = [
   { label: 'December', value: '11' },
 ];
 const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(y => ({ label: `${y}`, value: y.toString() }));
+
+const formatHour = (hour) => {
+  if (hour === 0) return '12 AM';
+  if (hour === 12) return '12 PM';
+  if (hour > 12) return `${hour - 12} PM`;
+  return `${hour} AM`;
+};
 
 export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
   const today = new Date();
@@ -95,7 +102,7 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
         {hours.map((hour) => (
           <View style={styles.row} key={hour}>
             <View style={styles.hourCol}>
-              <Text style={styles.hourText}>{hour} AM</Text>
+              <Text style={styles.hourText}>{formatHour(hour)}</Text>
             </View>
             {weekDays.map((date, dayIdx) => {
               const slotEvents = getEventsStartingAtSlot(date.getFullYear(), date.getMonth(), date.getDate(), hour);
@@ -121,7 +128,7 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
                       ]}
                     >
                       <Text style={styles.eventTitle}>{ev.title}</Text>
-                      <Text style={styles.eventTime}>{ev.start}:00 - {ev.end}:00</Text>
+                      <Text style={styles.eventTime}>{formatHour(ev.start)} - {formatHour(ev.end)}</Text>
                     </View>
                   ))}
                 </TouchableOpacity>

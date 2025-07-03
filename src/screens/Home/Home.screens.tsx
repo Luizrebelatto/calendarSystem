@@ -28,7 +28,12 @@ const months = [
   { label: 'Dezembro', value: '11' },
 ];
 const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(y => ({ label: `${y}`, value: y.toString() }));
-const hours = Array.from({ length: 12 }, (_, i) => i + 2).map(h => ({ label: `${h}:00`, value: h.toString() }));
+const hours = Array.from({ length: 24 }, (_, i) => i).map(h => {
+  if (h === 0) return { label: '12:00 AM', value: h.toString() };
+  if (h === 12) return { label: '12:00 PM', value: h.toString() };
+  if (h > 12) return { label: `${h - 12}:00 PM`, value: h.toString() };
+  return { label: `${h}:00 AM`, value: h.toString() };
+});
 
 export function Home(){
     const [events, setEvents] = useState(initialEvents);
@@ -54,6 +59,12 @@ export function Home(){
     };
 
     const handleAddMeeting = () => {
+        // Validação para garantir que a hora de fim seja maior que a hora de início
+        if (Number(selectedEndHour) <= Number(selectedStartHour)) {
+            Alert.alert('Invalid time', 'End time must be after start time.');
+            return;
+        }
+        
         const hasConflict = events.some(ev =>
             ev.year === Number(selectedYear) &&
             ev.month === Number(selectedMonth) &&
