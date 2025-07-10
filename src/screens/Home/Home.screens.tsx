@@ -6,10 +6,12 @@ import CalendarWeekGoogleStyle from "../Calendar/Calendar";
 import { PortalComponent } from "../../components/PortalComponent";
 
 const initialEvents = [
-  { id: 1, title: 'Meeting', year: 2024, month: 11, day: 15, start: 9, end: 10 },
-  { id: 2, title: 'Meeting', year: 2024, month: 11, day: 18, start: 8, end: 9 },
-  { id: 3, title: 'Meeting', year: 2024, month: 11, day: 20, start: 8, end: 9 },
-  { id: 4, title: 'Meeting', year: 2024, month: 11, day: 22, start: 9, end: 10 },
+  { id: 1, title: 'Meeting A', year: 2024, month: 11, day: 15, start: 9, end: 10 },
+  { id: 2, title: 'Meeting B', year: 2024, month: 11, day: 15, start: 9, end: 11 }, // Conflito com Meeting A
+  { id: 3, title: 'Meeting C', year: 2024, month: 11, day: 18, start: 8, end: 9 },
+  { id: 4, title: 'Meeting D', year: 2024, month: 11, day: 20, start: 9, end: 10 },
+  { id: 5, title: 'Meeting E', year: 2024, month: 11, day: 20, start: 9, end: 12 }, // Conflito com Meeting D
+  { id: 6, title: 'Meeting F', year: 2024, month: 11, day: 20, start: 10, end: 11 }, // Conflito com Meeting D e E
 ];
 
 export function Home(){
@@ -41,16 +43,29 @@ export function Home(){
             return;
         }
         
-        const hasConflict = events.some(ev =>
+        const conflictingEvents = events.filter(ev =>
             ev.year === Number(selectedYear) &&
             ev.month === Number(selectedMonth) &&
             ev.day === Number(selectedDay) &&
             ((Number(selectedStartHour) < ev.end && Number(selectedEndHour) > ev.start))
         );
-        if (hasConflict) {
-            Alert.alert('Time conflict', 'There is already a meeting during this period.');
+        
+        if (conflictingEvents.length > 0) {
+            Alert.alert(
+                'Time conflict detected', 
+                `There are ${conflictingEvents.length} meeting(s) during this period. The meetings will be displayed side by side.`,
+                [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Continue', onPress: () => addMeeting() }
+                ]
+            );
             return;
         }
+        
+        addMeeting();
+    };
+
+    const addMeeting = () => {
         const nextId = events.length + 1;
         setEvents([
             ...events,

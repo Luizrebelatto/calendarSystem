@@ -32,6 +32,26 @@ export const styles = StyleSheet.create({
       right: 2,
       zIndex: 2,
     },
+    conflictingEventsContainer: {
+      flexDirection: 'row',
+      width: '100%',
+      zIndex: 2,
+    },
+    eventGroup: {
+      flex: 1,
+      position: 'relative',
+    },
+    conflictingEventBlock: {
+      backgroundColor: '#ff6b6b',
+      borderRadius: 3,
+      padding: 1,
+      marginLeft: 2,
+      marginRight: 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      alignSelf: 'stretch',
+    },
     eventTitle: { color: '#fff', fontWeight: 'bold', fontSize: 12 },
     eventTime: { color: '#fff', fontSize: 10 },
     hourCol: { 
