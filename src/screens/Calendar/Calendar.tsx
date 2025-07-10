@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { Dropdown } from 'react-native-paper-dropdown';
 import HeaderCalendar from '../../components/HeaderCalendar';
 import { generateWeekDays } from '../../utils/generateWeekDays';
 import ScrollViewCalendar from '../../components/ScrollViewCalendar';
-import { months, years } from '../../utils/months-days-hours';
 import { styles } from './styles';
-import DateSelect from '../../components/DateSelect';
+import WrapperMonthYearDropDown from '../../components/WrapperMonthYearDropDown';
 
 export default function Calendar({ events, onSlotPress }) {
   const today = new Date();
@@ -19,33 +17,15 @@ export default function Calendar({ events, onSlotPress }) {
 
   const weekDays = generateWeekDays(firstSunday, weekIndex)
 
-  const goToPreviousWeek = () => setWeekIndex(weekIndex - 1);
-  const goToNextWeek = () => setWeekIndex(weekIndex + 1);
-
-  const handleMonthChange = (value) => { setSelectedMonth(value); setWeekIndex(0); };
-  const handleYearChange = (value) => { setSelectedYear(value); setWeekIndex(0); };
-
   return (
     <View style={styles.container}>
-      <View style={styles.controlsRow}>
-        <Dropdown
-          label={"Ano"}
-          mode={"outlined"}
-          value={selectedYear}
-          onSelect={handleYearChange}
-          options={years}
-          style={{ width: 90, marginRight: 8 }}
-        />
-        <Dropdown
-          label={"Mês"}
-          mode={"outlined"}
-          value={selectedMonth}
-          onSelect={handleMonthChange}
-          options={months}
-          style={{ width: 120, marginRight: 8 }}
-        />
-        <DateSelect goToNextWeek={goToNextWeek} goToPreviousWeek={goToPreviousWeek} weekIndex={weekIndex}/>
-      </View>
+      <WrapperMonthYearDropDown
+        selectedYear={selectedYear}
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
+        setSelectedYear={setSelectedYear}
+
+      />
       <HeaderCalendar
         selectedMonth={selectedMonth}
         selectedYear={selectedYear}
