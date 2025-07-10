@@ -29,7 +29,7 @@ export default function ScrollViewCalendar(data: IScrollViewCalendar) {
           style={[
             styles.eventBlock,
             {
-              height: 48 * (event.end - event.start) - 4,
+              height: 48 * (event.end - event.start),
               top: 0,
             },
           ]}
@@ -54,7 +54,7 @@ export default function ScrollViewCalendar(data: IScrollViewCalendar) {
             style={[
               styles.conflictingEventBlock,
               {
-                height: 48 * (event.end - event.start) - 4,
+                height: 48 * (event.end - event.start),
                 marginLeft: 2,
                 marginRight: 2,
                 flex: 1,
