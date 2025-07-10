@@ -10,8 +10,6 @@ interface IHeaderCalendar {
 }
 
 export default function HeaderCalendar(data: IHeaderCalendar) {
-
-  
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (

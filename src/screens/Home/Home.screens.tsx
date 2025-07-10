@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import { AnimatedFAB, Dialog, Portal, Button, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 import { styles } from "./Home.styles";
 import CalendarWeekGoogleStyle from "../../components/CalendarWeek";
+import { days, hours, months, years } from "../../utils/months-days-hours";
 
 const initialEvents = [
   { id: 1, title: 'Meeting', year: 2024, month: 11, day: 15, start: 9, end: 10 },
@@ -11,29 +12,6 @@ const initialEvents = [
   { id: 3, title: 'Meeting', year: 2024, month: 11, day: 20, start: 8, end: 9 },
   { id: 4, title: 'Meeting', year: 2024, month: 11, day: 22, start: 9, end: 10 },
 ];
-
-const days = Array.from({ length: 31 }, (_, i) => i + 1).map(d => ({ label: `${d}`, value: d.toString() }));
-const months = [
-  { label: 'Janeiro', value: '0' },
-  { label: 'Fevereiro', value: '1' },
-  { label: 'Março', value: '2' },
-  { label: 'Abril', value: '3' },
-  { label: 'Maio', value: '4' },
-  { label: 'Junho', value: '5' },
-  { label: 'Julho', value: '6' },
-  { label: 'Agosto', value: '7' },
-  { label: 'Setembro', value: '8' },
-  { label: 'Outubro', value: '9' },
-  { label: 'Novembro', value: '10' },
-  { label: 'Dezembro', value: '11' },
-];
-const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i).map(y => ({ label: `${y}`, value: y.toString() }));
-const hours = Array.from({ length: 24 }, (_, i) => i).map(h => {
-  if (h === 0) return { label: '12:00 AM', value: h.toString() };
-  if (h === 12) return { label: '12:00 PM', value: h.toString() };
-  if (h > 12) return { label: `${h - 12}:00 PM`, value: h.toString() };
-  return { label: `${h}:00 AM`, value: h.toString() };
-});
 
 export function Home(){
     const [events, setEvents] = useState(initialEvents);
@@ -59,7 +37,6 @@ export function Home(){
     };
 
     const handleAddMeeting = () => {
-        // Validação para garantir que a hora de fim seja maior que a hora de início
         if (Number(selectedEndHour) <= Number(selectedStartHour)) {
             Alert.alert('Invalid time', 'End time must be after start time.');
             return;

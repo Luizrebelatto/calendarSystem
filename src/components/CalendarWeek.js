@@ -150,8 +150,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     position: 'relative',
   },
-  dayName: { fontWeight: 'bold', color: '#fff', fontSize: 13, marginTop: 4 },
-  dayNumber: { fontWeight: 'bold', color: '#fff', fontSize: 18 },
   row: { flexDirection: 'row', minHeight: 48, borderBottomWidth: 1, borderColor: '#eee' },
   hourText: { color: '#888', fontSize: 12 },
   eventBlock: {
