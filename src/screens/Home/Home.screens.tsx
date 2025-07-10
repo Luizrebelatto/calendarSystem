@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { View, Alert } from "react-native";
-import { AnimatedFAB, Dialog, Portal, Button, TextInput } from "react-native-paper";
-import { Dropdown } from "react-native-paper-dropdown";
+import { AnimatedFAB } from "react-native-paper";
 import { styles } from "./Home.styles";
 import CalendarWeekGoogleStyle from "../Calendar/Calendar";
-import { days, hours, months, years } from "../../utils/months-days-hours";
+import { PortalComponent } from "../../components/PortalComponent";
 
 const initialEvents = [
   { id: 1, title: 'Meeting', year: 2024, month: 11, day: 15, start: 9, end: 10 },
@@ -82,62 +81,23 @@ export function Home(){
                 iconMode="dynamic"
                 style={styles.fabStyle}
              />
-            <Portal>
-              <Dialog visible={modalVisible} onDismiss={() => setModalVisible(false)} style={{ alignSelf: 'center', width: 300, backgroundColor: '#cb9b54' }}>
-                <Dialog.Title style={{ textAlign: 'center' }}>Create Meeting</Dialog.Title>
-                <Dialog.Content>
-                  <View style={{ backgroundColor: '#cb9b54', borderRadius: 10, padding: 10 }}>
-                    <TextInput
-                      label="Meeting Title"
-                      value={meetingTitle}
-                      onChangeText={setMeetingTitle}
-                      mode="outlined"
-                      style={{ marginBottom: 10 }}
-                      placeholder="Enter the meeting title"
-                    />
-                    <Dropdown
-                      label={"Year"}
-                      mode={"outlined"}
-                      value={selectedYear}
-                      onSelect={setSelectedYear}
-                      options={years}
-                    />
-                    <Dropdown
-                      label={"Month"}
-                      mode={"outlined"}
-                      value={selectedMonth}
-                      onSelect={setSelectedMonth}
-                      options={months}
-                    />
-                    <Dropdown
-                      label={"day"}
-                      mode={"outlined"}
-                      value={selectedDay}
-                      onSelect={setSelectedDay}
-                      options={days}
-                    />
-                    <Dropdown
-                      label={"begin hour"}
-                      mode={"outlined"}
-                      value={selectedStartHour}
-                      onSelect={setSelectedStartHour}
-                      options={hours}
-                    />
-                    <Dropdown
-                      label={"end hour"}
-                      mode={"outlined"}
-                      value={selectedEndHour}
-                      onSelect={setSelectedEndHour}
-                      options={hours}
-                    />
-                  </View>
-                </Dialog.Content>
-                <Dialog.Actions>
-                  <Button onPress={() => setModalVisible(false)}>Cancelar</Button>
-                  <Button onPress={handleAddMeeting}>Adicionar</Button>
-                </Dialog.Actions>
-              </Dialog>
-            </Portal>
+            <PortalComponent
+              visible={modalVisible}
+              onDismiss={() => setModalVisible(false)}
+              onAdd={handleAddMeeting}
+              meetingTitle={meetingTitle}
+              setMeetingTitle={setMeetingTitle}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              selectedMonth={selectedMonth}
+              setSelectedMonth={setSelectedMonth}
+              selectedDay={selectedDay}
+              setSelectedDay={setSelectedDay}
+              selectedStartHour={selectedStartHour}
+              setSelectedStartHour={setSelectedStartHour}
+              selectedEndHour={selectedEndHour}
+              setSelectedEndHour={setSelectedEndHour}
+            />
        </View>
     )
 }
