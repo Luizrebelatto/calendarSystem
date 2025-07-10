@@ -3,7 +3,7 @@ import { View, Alert } from "react-native";
 import { AnimatedFAB, Dialog, Portal, Button, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 import { styles } from "./Home.styles";
-import CalendarWeekGoogleStyle from "../../components/CalendarWeek";
+import CalendarWeekGoogleStyle from "../Calendar/Calendar";
 import { days, hours, months, years } from "../../utils/months-days-hours";
 
 const initialEvents = [
