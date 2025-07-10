@@ -34,3 +34,5 @@ export const hours: elementCalendar[] = Array.from({ length: 24 }, (_, i) => i).
   if (h > 12) return { label: `${h - 12}:00 PM`, value: h.toString() };
   return { label: `${h}:00 AM`, value: h.toString() };
 });
+
+export const daysOfWeek: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

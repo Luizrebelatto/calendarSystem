@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { styles } from './styles';
+import { daysOfWeek } from '../../utils/months-days-hours';
 
 interface IHeaderCalendar {
     selectedYear: string;
@@ -10,8 +11,6 @@ interface IHeaderCalendar {
 }
 
 export default function HeaderCalendar(data: IHeaderCalendar) {
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
   return (
     <View style={styles.headerRow}>
       <View style={styles.hourCol} />
