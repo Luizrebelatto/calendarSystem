@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Dropdown } from 'react-native-paper-dropdown';
+import HeaderCalendar from './HeaderCalendar';
+import { generateWeekDays } from '../utils/generateWeekDays';
 
-const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const hours = Array.from({ length: 24 }, (_, i) => i);
 const months = [
   { label: 'January', value: '0' },
@@ -36,11 +37,8 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
   firstSunday.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay());
   const [weekIndex, setWeekIndex] = useState(0);
 
-  const weekDays = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(firstSunday);
-    d.setDate(firstSunday.getDate() + weekIndex * 7 + i);
-    return d;
-  });
+  const weekDays = generateWeekDays(firstSunday, weekIndex)
+
   const getEventsStartingAtSlot = (year, month, day, hour) => {
     return events.filter(ev =>
       ev.year === year &&
@@ -89,15 +87,11 @@ export default function CalendarWeekGoogleStyle({ events, onSlotPress }) {
         <Text style={styles.weekLabel}>Week {weekIndex + 1}</Text>
         <TouchableOpacity onPress={goToNextWeek} style={styles.navButton}><Text style={styles.navButtonText}>›</Text></TouchableOpacity>
       </View>
-      <View style={styles.headerRow}>
-        <View style={styles.hourCol} />
-        {weekDays.map((date, idx) => (
-          <View style={styles.dayCol} key={idx}>
-            <Text style={styles.dayName}>{daysOfWeek[date.getDay()]}</Text>
-            <Text style={styles.dayNumber}>{date.getDate()}</Text>
-          </View>
-        ))}
-      </View>
+      <HeaderCalendar
+        selectedMonth={selectedMonth}
+        selectedYear={selectedYear}
+        weekDays={weekDays}
+      />
       <ScrollView style={{ flex: 1 }}>
         {hours.map((hour) => (
           <View style={styles.row} key={hour}>
@@ -147,8 +141,6 @@ const styles = StyleSheet.create({
   navButton: { padding: 6, backgroundColor: '#e0e0e0', borderRadius: 5, marginHorizontal: 2 },
   navButtonText: { fontSize: 18, fontWeight: 'bold', color: '#333' },
   weekLabel: { fontWeight: 'bold', fontSize: 14, marginHorizontal: 8 },
-  headerRow: { flexDirection: 'row', borderBottomWidth: 1, borderColor: '#eee', backgroundColor: '#dbb781' },
-  hourCol: { width: 50, alignItems: 'center', justifyContent: 'center' },
   dayCol: {
     flex: 1,
     minHeight: 40,
